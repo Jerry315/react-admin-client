@@ -9,9 +9,7 @@ const user = storageUtils.getUser()
 memoryUtils.user = user
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <App/>,
+    document.getElementById('root')
 );
 

@@ -16,7 +16,7 @@ export default {
     },
     // 删除用户信息
     removeUser() {
-        store.remote(USER_KEY)
+        store.remove(USER_KEY)
     }
 
 
