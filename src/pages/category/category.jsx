@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import {Card, Button, Icon, Table, message, Modal} from 'antd'
 
 import LinkButton from '../../components/link-button'
-import {reqCategories} from '../../api/index'
+import {reqCategories, reqUpdateCategory, reqAddCategory} from '../../api/index'
+import AddForm from "./add-form";
+import UpdateForm from "./update-form";
 
 export default class Category extends Component {
 
@@ -16,9 +18,10 @@ export default class Category extends Component {
     }
 
 
+    getCategories = async (parentId) => {
 
-    getCategories = async () => {
-        const {parentId} = this.state
+        parentId = parentId || this.state.parentId
+
         this.setState({loading: true})
         const result = await reqCategories(parentId)
         if (result.status === 0) {
@@ -57,6 +60,7 @@ export default class Category extends Component {
         this.setState({
             showStatus: 0
         })
+        this.form.resetFields()
     }
 
     // 弹出添加对话框
@@ -68,11 +72,33 @@ export default class Category extends Component {
 
     // 添加品类
     addCategory = () => {
-        console.log("addCategory")
+        this.form.validateFields(async (error, values) => {
+            if (!error) {
+                // 隐藏弹出框
+                this.setState({
+                    showStatus: 0
+                })
+                // 准备数据
+                const {parentId, categoryName} = values
+                // 清空输入框内容
+                this.form.resetFields()
+                // 发送请求数据
+                const result = await reqAddCategory(categoryName, parentId)
+                if (result.status === 0) {
+                    if (parentId === this.state.parentId) {
+                        this.getCategories()
+                    } else if (parentId === '0') {
+                        this.getCategories('0')
+                    }
+                }
+            }
+        })
+
     }
 
     // 弹出添加对话框
-    showUpdateCategory = () => {
+    showUpdateCategory = (category) => {
+        this.category = category
         this.setState({
             showStatus: 2
         })
@@ -80,7 +106,25 @@ export default class Category extends Component {
 
     // 添加品类
     updateCategory = () => {
-        console.log("updateCategory")
+        this.form.validateFields(async (error, values) => {
+            if (!error) {
+                // 1.隐藏对话框
+                this.setState({
+                    showStatus: 0
+                })
+                // 2.准备数据
+                const categoryId = this.category._id
+                const form = this.form
+                const categoryName = values
+                form.resetFields()
+                const result = await reqUpdateCategory({categoryId, categoryName})
+                console.log(result)
+                if (result.status === 0) {
+                    // 3.重新渲染数据
+                    this.getCategories()
+                }
+            }
+        })
     }
 
     initColumns = () => [
@@ -94,7 +138,7 @@ export default class Category extends Component {
             render: (category) => {
                 return (
                     <span>
-                            <LinkButton onClick={this.showUpdateCategory}>修改分类</LinkButton>
+                            <LinkButton onClick={() => this.showUpdateCategory(category)}>修改分类</LinkButton>
                         {this.state.parentId === '0' ?
                             <LinkButton onClick={() => this.showSubCategories(category)}>查看子分类</LinkButton> : null}
                         </span>
@@ -113,6 +157,7 @@ export default class Category extends Component {
     }
 
     render() {
+        const category = this.category || {}
         const {categories, loading, parentId, subCategories, parentName} = this.state
         const title = parentId === '0' ? '一级分类列表' : (<span>
             <LinkButton onClick={this.showCategories}>一级分类列表</LinkButton>
@@ -143,14 +188,18 @@ export default class Category extends Component {
                     visible={this.state.showStatus === 1}
                     onOk={this.addCategory}
                     onCancel={this.handleCancel}>
-                    <p>添加分类</p>
+                    <AddForm categories={categories} parentId={parentId} setForm={(form) => {
+                        this.form = form
+                    }}/>
                 </Modal>
                 <Modal
                     title="更新分类"
                     visible={this.state.showStatus === 2}
                     onOk={this.updateCategory}
                     onCancel={this.handleCancel}>
-                    <p>更新分类</p>
+                    <UpdateForm categoryName={category.name} setForm={(form) => {
+                        this.form = form
+                    }}/>
                 </Modal>
             </Card>
         )

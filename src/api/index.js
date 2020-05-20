@@ -54,3 +54,23 @@ export const reqUpdateCategory = ({categoryId, categoryName}) => ajax("/manage/c
     categoryId,
     categoryName
 }, "POST")
+
+// 根据分类id获取分类信息
+export const reqCategory = (categoryId) => ajax("/manage/category/info", {categoryId: categoryId})
+
+// 获取商品列表
+export const reqProducts = (pageNum, pageSize, searchName, searchType) => ajax("/manage/product/list", {
+    pageNum,
+    pageSize,
+    searchName,
+    searchType
+})
+
+// 添加或更新商品
+export const reqAddOrUpdateProduct = (product) => ajax("/manage/product/" + (product._id ? 'update' : 'add'), {product}, "POST")
+
+// 更新商品状态
+export const reqUpdateProduct = (productId, status) => ajax("/manage/product/updateStatus", {productId, status}, "POST")
+
+// 删除图片
+export const reqDelPicture = (name) => ajax("/manage/img/delete", {name}, "POST")

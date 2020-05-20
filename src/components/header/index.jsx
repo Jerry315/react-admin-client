@@ -33,7 +33,7 @@ class Header extends Component {
                 title = item.title
             } else if (item.children) {
                 // 在子路由没有嵌套的情况下
-                const cItem = item.children.find(cItem => cItem.key === path)
+                const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
                 if (cItem) {
                     title = cItem.title
                 }

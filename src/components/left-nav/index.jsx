@@ -48,7 +48,7 @@ class LeftNav extends Component {
                     </Menu.Item>
                 ))
             } else {
-                const cItem = item.children.find(citem => citem.key === path)
+                const cItem = item.children.find(citem => path.indexOf(citem.key) === 0)
                 if (cItem) {
                     this.openKey = item.key
                 }
@@ -61,7 +61,7 @@ class LeftNav extends Component {
             return pre
         }, [])
     }
-
+    
     // 第一次render()之前执行一次
     // 为第一次render()准备数据（必须同步的）
     componentWillMount() {
@@ -69,8 +69,12 @@ class LeftNav extends Component {
     }
 
     render() {
-        const path = this.props.location.pathname
         const openKey = this.openKey
+        let path = this.props.location.pathname
+        if (path.indexOf("/product") === 0) {
+            path = "/product"
+        }
+
         const menuNodes = this.menuNodes
         return (
             <div className="left-nav">
