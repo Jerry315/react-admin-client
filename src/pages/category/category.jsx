@@ -93,7 +93,6 @@ export default class Category extends Component {
                 }
             }
         })
-
     }
 
     // 弹出添加对话框
@@ -115,10 +114,9 @@ export default class Category extends Component {
                 // 2.准备数据
                 const categoryId = this.category._id
                 const form = this.form
-                const categoryName = values
+                const {categoryName} = values
                 form.resetFields()
                 const result = await reqUpdateCategory({categoryId, categoryName})
-                console.log(result)
                 if (result.status === 0) {
                     // 3.重新渲染数据
                     this.getCategories()

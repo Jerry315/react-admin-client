@@ -16,7 +16,6 @@ export default class ProductDetail extends Component {
 
     async componentDidMount() {
         const {categoryId} = this.props.location.state.product
-        console.log(categoryId)
         const result = await reqCategory(categoryId)
 
         const {parentId, name} = result.data

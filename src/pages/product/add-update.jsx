@@ -48,10 +48,8 @@ class AddUpdate extends Component {
                     product.categoryId = categoryId
                 }
                 if (this.isUpdate) {
-                    console.log("更新数据")
                     product._id = this.product._id
                 }
-                console.log(product)
                 const result = await reqAddOrUpdateProduct(product)
                 if (result.status === 0) {
                     message.success(`${this.isUpdate ? '更新' : '添加'}商品成功`)

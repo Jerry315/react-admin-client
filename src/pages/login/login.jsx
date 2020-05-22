@@ -11,18 +11,15 @@ import storageUtils from "../../utils/storageUtils";
 // 登录路由组件
 class Login extends Component {
 
-
     handleSubmit = (event) => {
         // 阻止表单默认事件
         event.preventDefault();
 
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
                 const {username, password} = values
                 const result = await reqLogin(username, password)
                 if (result.status === 0) {
-                    console.log("登录成功")
                     memoryUtils.user = result.data
                     storageUtils.saveUser(result.data)
                     this.props.history.replace("/")
@@ -31,7 +28,7 @@ class Login extends Component {
                 }
 
             } else {
-                console.log("校验失败")
+                message.error("校验失败")
             }
         });
     };

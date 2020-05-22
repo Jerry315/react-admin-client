@@ -74,3 +74,21 @@ export const reqUpdateProduct = (productId, status) => ajax("/manage/product/upd
 
 // 删除图片
 export const reqDelPicture = (name) => ajax("/manage/img/delete", {name}, "POST")
+
+// 获取所有角色列表
+export const reqGetRoles = () => ajax("/manage/role/list")
+
+// 添加角色
+export const reqAddRole = (roleName) => ajax("/manage/role/add", {roleName}, "POST")
+
+// 更新角色权限
+export const reqUpdateRole = (role) => ajax("/manage/role/update", {role}, "POST")
+
+// 获取用户
+export const reqGetUsers = () => ajax("/manage/user/list")
+
+// 删除用户
+export const reqDelUser = (uid) => ajax("/manage/user/delete", {uid}, "POST")
+
+// 添加或更新用户
+export const reqAddOrUpdateUser = (user) => ajax("/manage/user/" + (user._id ? 'update' : 'register'), user, "POST")
